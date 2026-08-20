@@ -104,5 +104,37 @@
         "anh": ""
       }
     ]
+  },
+  {
+    "id": "khi-nu-chinh-xuyen-khong-tu-tien-tau-hai",
+    "ten": "Khi Nữ Chính Xuyên Không, Tu Tiên Tấu Hài",
+    "theLoai": "Tu tiên",
+    "nam": 2026,
+    "noiBat": false,
+    "anh": "",
+    "moTa": "Hứa Khiêm Hoa và cô bạn thân cùng xuyên không về thế giới tu tiên cổ đại. Một người làm đệ tử phế vật đột biến linh căn, một người làm lão bà Chưởng môn tối cao. Cùng nhau, họ quậy đục nước gián điệp hệ thống của Thái tử Trần Hạo Giản và tạo nên những tình huống dở khóc dở cười.\n",
+    "tap": [
+      {
+        "ten": "Phần 01-1",
+        "dm": "xaz0sre",
+        "phut": "41:44",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 01-2",
+        "dm": "xaz0sra",
+        "phut": "47:26",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 01-3",
+        "dm": "xaz0sr6",
+        "phut": "38:07",
+        "ngay": "20/8/2026",
+        "anh": ""
+      }
+    ]
   }
 ]
