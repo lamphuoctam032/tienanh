@@ -62,9 +62,9 @@ header{position:sticky;top:0;z-index:60;background:rgba(11,14,19,.9);backdrop-fi
 .poster .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,10,14,.86) 0%,rgba(8,10,14,.15) 42%,transparent 65%)}
 .bdg{position:absolute;top:6px;left:6px;background:var(--gold);color:#17120A;font-family:"Roboto Mono",monospace;
   font-size:10px;font-weight:500;padding:2.5px 6px;border-radius:2px;letter-spacing:.04em}
-.tagq{position:absolute;bottom:6px;left:6px;background:rgba(63,208,168,.16);color:var(--jade);
-  border:1px solid rgba(63,208,168,.32);font-family:"Roboto Mono",monospace;font-size:9px;
-  padding:2px 5px;border-radius:2px;letter-spacing:.08em}
+.vw{position:absolute;bottom:6px;left:7px;right:7px;display:flex;align-items:center;gap:4px;
+  font-family:"Roboto Mono",monospace;font-size:10px;color:#D9DEE6;text-shadow:0 1px 3px rgba(0,0,0,.9)}
+.vw svg{opacity:.85;flex:none}
 .play-ov{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transition:.18s;background:rgba(8,10,14,.35)}
 .play-ov span{width:44px;height:44px;border-radius:50%;background:rgba(233,169,60,.95);color:#17120A;display:grid;place-items:center}
 
@@ -180,6 +180,24 @@ body.view-detail .detail{display:block}
 .cmt p{margin:4px 0 0;font-size:14px;color:var(--tx2)}
 .note{font-size:12.5px;color:var(--tx3);margin-top:12px}
 
+/* ---- ủng hộ ---- */
+.modal{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.modal .veil{position:absolute;inset:0;background:rgba(4,6,9,.78);backdrop-filter:blur(3px)}
+.modal .sheet{position:relative;background:var(--card);border:1px solid var(--line);border-radius:8px;
+  width:min(400px,100%);max-height:88vh;overflow:auto;padding:26px 24px;text-align:center}
+.modal .xx{position:absolute;top:8px;right:12px;font-size:24px;line-height:1;color:var(--tx3)}
+.qr{width:210px;height:210px;margin:16px auto 14px;border-radius:8px;background:#fff;padding:8px;object-fit:contain}
+.qr-none{width:210px;height:210px;margin:16px auto 14px;border-radius:8px;border:1px dashed var(--line);
+  display:grid;place-items:center;color:var(--tx3);font-size:12.5px;padding:16px}
+.mm{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--bg2);
+  border:1px solid var(--line);border-radius:999px;padding:10px 16px;margin:0 0 8px}
+.mm b{font-family:"Roboto Mono",monospace;font-size:17px;letter-spacing:.06em}
+.mm button{color:var(--gold);font-size:12.5px;white-space:nowrap}
+.btn-heart{border-color:#B8446A;color:#FF7FA5}
+.btn-heart:hover{background:#B8446A;color:#fff;border-color:#B8446A}
+.cmt-warn{font-size:12.5px;color:var(--tx3);background:var(--bg2);border:1px solid var(--line);
+  border-radius:var(--r);padding:9px 12px;margin-bottom:14px}
 .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,18px);z-index:200;background:var(--gold);
   color:#17120A;font-weight:500;padding:11px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:.22s}
 .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -242,6 +260,7 @@ footer .fl{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="Tìm phim, thể loại…" autocomplete="off">
     </label>
+    <button class="btn btn-heart" id="uhBtn" style="display:none">♥ Ủng hộ</button>
   </div>
 </header>
 
@@ -306,7 +325,6 @@ footer .fl{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
             <button class="switch" id="autoNext" aria-pressed="true"><span class="tr"></span> Tự động chuyển tập</button>
             <button class="btn" id="prevEp">← Phần trước</button>
             <button class="btn" id="nextEp">Phần sau →</button>
-            <a class="btn" id="dmLink" target="_blank" rel="noopener" style="display:none;text-decoration:none">Không xem được? Mở trên Dailymotion ↗</a>
           </div>
         </div>
 
@@ -323,6 +341,7 @@ footer .fl{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
             <h2 class="display" style="font-size:19px">Bình <em>luận</em></h2>
             <span class="eyebrow" id="cmtCount"></span>
           </div>
+          <div class="cmt-warn" id="cmtWarn" style="display:none">Bình luận đang ở chế độ tạm — tải lại trang là mất. Nối Supabase trong trang quản trị để lưu vĩnh viễn.</div>
           <div class="cmt-form">
             <textarea id="cmtText" placeholder="Viết cảm nhận của bạn về phần này…"></textarea>
             <div class="row">
@@ -331,7 +350,6 @@ footer .fl{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
             </div>
           </div>
           <div id="cmtList"></div>
-          <p class="note">Bình luận hiện chỉ lưu tạm trong phiên xem.</p>
         </section>
       </div>
 
@@ -348,7 +366,7 @@ footer .fl{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 <footer>
   <div class="wrap fl">
     <div>TIÊN ẢNH — review & tóm tắt phim hoạt hình.</div>
-    <div class="mono">Video lưu trên Dailymotion</div>
+    <div class="mono">© 2026 Tiên Ảnh</div>
   </div>
 </footer>
 
@@ -356,6 +374,19 @@ footer .fl{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
   <button class="mb" id="mPrev" aria-label="Phần trước">←</button>
   <div class="mnow"><b id="mEp">—</b><span id="mPos"></span></div>
   <button class="mb go" id="mNext" aria-label="Phần sau">→</button>
+</div>
+
+<div class="modal" id="uhModal" role="dialog" aria-modal="true">
+  <div class="veil" data-x></div>
+  <div class="sheet">
+    <button class="xx" data-x aria-label="Đóng">×</button>
+    <div class="eyebrow">Ủng hộ</div>
+    <h2 class="display" style="font-size:24px;margin:8px 0 6px">Mời mình ly cà phê</h2>
+    <p style="color:var(--tx2);font-size:13.5px;margin:0" id="uhLoi"></p>
+    <div id="uhQR"></div>
+    <div class="mm" id="uhSoBox"><b id="uhSo"></b><button id="uhCopy">Sao chép</button></div>
+    <div style="color:var(--tx3);font-size:12.5px" id="uhTen"></div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -377,6 +408,38 @@ const phim = id => PHIM.find(p => p.id === id);
 const toSec = v => { const a = String(v).split(":").map(Number); return a.length===3 ? a[0]*3600+a[1]*60+a[2] : a[0]*60+(a[1]||0); };
 const dmThumb = dm => dm ? "https://www.dailymotion.com/thumbnail/video/" + dm : "";
 const esc = v => String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+const CFG = { momoSo:"", momoTen:"", momoQR:"", loiCamOn:"", supaUrl:"", supaKey:"" };
+const XEM = {};   /* id video -> luot xem, lay tu Dailymotion */
+function fmtXem(n){
+  if(n == null) return null;
+  if(n >= 1e6) return (n/1e6).toFixed(1).replace(".",",").replace(",0","") + "Tr";
+  if(n >= 1e3) return (n/1e3).toFixed(1).replace(".",",").replace(",0","") + "K";
+  return String(n);
+}
+const xemTap  = t => XEM[t.dm];
+const xemPhim = p => { let c=0, co=false; p.tap.forEach(t=>{ if(XEM[t.dm]!=null){ c+=XEM[t.dm]; co=true; } }); return co?c:null; };
+function vwHTML(n){
+  const v = fmtXem(n);
+  if(v == null) return "";
+  return `<div class="vw"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="2.6"/></svg>${v}</div>`;
+}
+async function napLuotXem(){
+  const ids = [...new Set(PHIM.flatMap(p => p.tap.map(t => t.dm)).filter(Boolean))];
+  if(!ids.length) return;
+  try{
+    for(let i = 0; i < ids.length; i += 100){
+      const lo = ids.slice(i, i + 100);
+      const r = await fetch(`https://api.dailymotion.com/videos?ids=${lo.join(",")}&fields=id,views_total&limit=100`);
+      if(!r.ok) return;
+      const d = await r.json();
+      (d.list || []).forEach(v => { if(v && v.id) XEM[v.id] = v.views_total; });
+    }
+    if(Object.keys(XEM).length){
+      renderHero(); renderLatest(); renderGrid();
+      if(S.phimId && document.body.classList.contains("view-detail")) capNhatXemChiTiet();
+    }
+  }catch(e){ /* bị chặn thì bỏ qua, trang vẫn chạy bình thường */ }
+}
 function toast(m){ const t=$("#toast"); t.textContent=m; t.classList.add("on"); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("on"),2200); }
 
 /* ảnh: ưu tiên ảnh bìa tự đặt, không có thì lấy thumbnail Dailymotion */
@@ -390,7 +453,7 @@ function posterHTML(p){
     <img class="pimg ${riêng?"cover":"contain"}" src="${esc(url)}" alt="" loading="lazy">
     <div class="shade"></div>
     <div class="bdg">${p.tap.length} phần</div>
-    <div class="tagq">TÓM TẮT</div>
+    ${vwHTML(xemPhim(p))}
     <div class="play-ov"><span>▶</span></div>`;
 }
 
@@ -418,7 +481,7 @@ function renderLatest(){
     return `<button class="epcard" data-p="${esc(r.p.id)}" data-i="${r.i}">
       <div class="sh">${u?`<img src="${esc(u)}" alt="" loading="lazy">`:""}
         <div class="dur">${esc(r.t.phut)}</div><div class="play-ov"><span>▶</span></div></div>
-      <h4>${esc(r.p.ten)}</h4><p>${esc(r.t.ten)} · ${esc(r.p.theLoai)}</p></button>`;
+      <h4>${esc(r.p.ten)}</h4><p>${esc(r.t.ten)}${fmtXem(xemTap(r.t))?" · "+fmtXem(xemTap(r.t))+" lượt xem":" · "+esc(r.p.theLoai)}</p></button>`;
   }).join("");
   $("#rail").querySelectorAll(".epcard").forEach(b=> b.onclick = ()=> open_(b.dataset.p, +b.dataset.i));
 }
@@ -463,16 +526,13 @@ function close_(){ clearTimers(); $("#frameSlot").innerHTML=""; document.body.cl
 function mountPlayer(autoplay){
   const t = curT();
   if(!t.dm){
-    $("#dmLink").style.display = "none";
     $("#frameSlot").innerHTML = `<div class="noid">
       <div style="font-size:15px;font-weight:500;color:var(--tx)">Chưa gắn ID video cho phần này</div>
-      <div style="font-size:13px;max-width:40ch">Mở <code>admin.html</code>, dán ID Dailymotion vào phần này rồi lưu lại.</div></div>`;
+      <div style="font-size:13px;max-width:40ch">Mở <code>admin.html</code>, dán ID vào phần này rồi lưu lại.</div></div>`;
     return;
   }
   const src = `https://geo.dailymotion.com/player.html?video=${t.dm}${autoplay?"&autoplay=1":""}`;
   $("#frameSlot").innerHTML = `<iframe src="${src}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="${esc(curP().ten)} — ${esc(t.ten)}"></iframe>`;
-  $("#dmLink").href = "https://www.dailymotion.com/video/" + t.dm;
-  $("#dmLink").style.display = "inline-flex";
   startWatch();
 }
 
@@ -537,13 +597,15 @@ function renderDetail(autoplay){
   const p = curP(), t = curT();
   $("#dTitle").textContent = p.ten;
   $("#dEp").textContent = t.ten;
-  $("#dSub").textContent = `${p.theLoai} · ${t.phut} · đăng ${t.ngay||"—"}`;
+  const vx = fmtXem(xemTap(t));
+  $("#dSub").textContent = `${p.theLoai} · ${t.phut}${vx ? " · " + vx + " lượt xem" : ""} · đăng ${t.ngay||"—"}`;
   $("#epCount").textContent = `${p.tap.length} phần`;
   $("#dInfo").innerHTML = `
     <dt>Thể loại</dt><dd>${esc(p.theLoai)}</dd>
     <dt>Số phần</dt><dd>${p.tap.length}</dd>
     <dt>Năm</dt><dd>${p.nam}</dd>
-    <dt>Tổng thời lượng</dt><dd class="mono">${Math.round(p.tap.reduce((s,x)=>s+toSec(x.phut),0)/60)} phút</dd>`;
+    <dt>Tổng thời lượng</dt><dd class="mono">${Math.round(p.tap.reduce((s,x)=>s+toSec(x.phut),0)/60)} phút</dd>
+    ${fmtXem(xemPhim(p)) ? `<dt>Lượt xem</dt><dd class="mono">${fmtXem(xemPhim(p))}</dd>` : ""}`;
   $("#dTags").innerHTML = [p.theLoai,"Review","Tóm tắt","Lồng tiếng Việt"].map(x=>`<span class="pill">${esc(x)}</span>`).join("");
   $("#dDesc").textContent = p.moTa || "";
   $("#mEp").textContent = t.ten;
@@ -553,6 +615,7 @@ function renderDetail(autoplay){
   renderEps(); renderComments(); mountPlayer(autoplay);
 }
 
+function capNhatXemChiTiet(){ if(S.phimId) renderDetail(false); }
 function renderEps(){
   const p = curP();
   $("#eps").innerHTML = p.tap.map((t,i)=>`
@@ -566,20 +629,92 @@ function renderEps(){
 
 /* ---------- bình luận ---------- */
 const cKey = ()=> S.phimId + ":" + S.ep;
-function renderComments(){
-  const list = S.comments[cKey()] || [];
+const coSupa = ()=> !!(CFG.supaUrl && CFG.supaKey);
+const hSupa = ()=> ({ apikey: CFG.supaKey, Authorization: "Bearer " + CFG.supaKey, "Content-Type":"application/json" });
+
+function khiNao(iso){
+  if(!iso) return "";
+  const s = (Date.now() - new Date(iso).getTime())/1000;
+  if(s < 60) return "vừa xong";
+  if(s < 3600) return Math.floor(s/60) + " phút trước";
+  if(s < 86400) return Math.floor(s/3600) + " giờ trước";
+  if(s < 2592000) return Math.floor(s/86400) + " ngày trước";
+  return new Date(iso).toLocaleDateString("vi-VN");
+}
+function veBinhLuan(list){
   $("#cmtCount").textContent = `${list.length} bình luận`;
   $("#cmtList").innerHTML = list.length ? list.map(c=>`
-    <div class="cmt"><div class="av">${esc((c.who[0]||"?").toUpperCase())}</div>
-    <div><span class="who">${esc(c.who)}</span><span class="when">${esc(c.when)}</span><p>${esc(c.text)}</p></div></div>`).join("")
-    : `<div class="empty">Chưa có bình luận nào cho phần này.</div>`;
+    <div class="cmt"><div class="av">${esc((String(c.ten||"?")[0]).toUpperCase())}</div>
+    <div><span class="who">${esc(c.ten)}</span><span class="when">${esc(c.when || khiNao(c.tao_luc))}</span>
+    <p>${esc(c.noidung)}</p></div></div>`).join("")
+    : `<div class="empty">Chưa có bình luận nào cho phần này. Bạn viết dòng đầu tiên nhé.</div>`;
 }
-$("#cmtSend").onclick = ()=>{
-  const t = $("#cmtText").value.trim();
-  if(!t){ $("#cmtText").focus(); return toast("Nhập nội dung trước đã."); }
-  (S.comments[cKey()] ||= []).unshift({ who: $("#cmtName").value.trim()||"Khách", text:t, when:"vừa xong" });
-  $("#cmtText").value = ""; renderComments(); toast("Đã đăng bình luận.");
+async function renderComments(){
+  $("#cmtWarn").style.display = coSupa() ? "none" : "block";
+  if(!coSupa()) return veBinhLuan(S.comments[cKey()] || []);
+  $("#cmtList").innerHTML = `<div class="empty">Đang tải bình luận…</div>`;
+  const khoa = cKey();
+  try{
+    const u = `${CFG.supaUrl}/rest/v1/binhluan?phim=eq.${encodeURIComponent(S.phimId)}&tap=eq.${S.ep}&order=tao_luc.desc&limit=200`;
+    const r = await fetch(u, { headers: hSupa() });
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    const d = await r.json();
+    if(khoa !== cKey()) return;          /* người dùng đã chuyển tập */
+    veBinhLuan(d);
+  }catch(e){
+    $("#cmtList").innerHTML = `<div class="empty">Không tải được bình luận lúc này.</div>`;
+  }
+}
+$("#cmtSend").onclick = async ()=>{
+  const noi = $("#cmtText").value.trim();
+  const ten = ($("#cmtName").value.trim() || "Khách").slice(0,40);
+  if(!noi) { $("#cmtText").focus(); return toast("Nhập nội dung trước đã."); }
+  if(noi.length > 1000) return toast("Bình luận dài quá, rút ngắn giúp mình.");
+  if(!coSupa()){
+    (S.comments[cKey()] ||= []).unshift({ ten, noidung:noi, when:"vừa xong" });
+    $("#cmtText").value = ""; return renderComments();
+  }
+  const nut = $("#cmtSend"), cu = nut.textContent;
+  nut.textContent = "Đang gửi…"; nut.disabled = true;
+  try{
+    const r = await fetch(`${CFG.supaUrl}/rest/v1/binhluan`, {
+      method:"POST", headers:{...hSupa(), Prefer:"return=minimal"},
+      body: JSON.stringify({ phim:S.phimId, tap:S.ep, ten, noidung:noi })
+    });
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    $("#cmtText").value = ""; toast("Đã đăng bình luận."); renderComments();
+  }catch(e){
+    toast("Gửi không được, thử lại sau nhé.");
+  }finally{ nut.textContent = cu; nut.disabled = false; }
 };
+
+/* ---------- ủng hộ ---------- */
+function dungCauHinh(){
+  if(CFG.momoSo || CFG.momoQR){
+    $("#uhBtn").style.display = "inline-flex";
+    $("#uhLoi").textContent = CFG.loiCamOn || "Trang chạy được là nhờ mọi người ghé xem. Ủng hộ bao nhiêu cũng quý.";
+    $("#uhQR").innerHTML = CFG.momoQR
+      ? `<img class="qr" src="${esc(CFG.momoQR)}" alt="Mã QR Momo">`
+      : `<div class="qr-none">Chưa gắn ảnh mã QR</div>`;
+    $("#uhSoBox").style.display = CFG.momoSo ? "flex" : "none";
+    $("#uhSo").textContent = CFG.momoSo || "";
+    $("#uhTen").textContent = CFG.momoTen ? "Chủ tài khoản: " + CFG.momoTen : "";
+  }
+}
+$("#uhBtn").onclick = ()=> $("#uhModal").classList.add("on");
+document.querySelectorAll("#uhModal [data-x]").forEach(el => el.onclick = ()=> $("#uhModal").classList.remove("on"));
+$("#uhCopy").onclick = async ()=>{
+  try{ await navigator.clipboard.writeText(CFG.momoSo); toast("Đã sao chép số."); }
+  catch(e){ toast("Không sao chép được, bạn ghi tay giúp mình."); }
+};
+async function napCauHinh(){
+  try{
+    const r = await fetch("cauhinh.json?v=" + Date.now());
+    if(!r.ok) return;
+    Object.assign(CFG, await r.json());
+    dungCauHinh();
+  }catch(e){}
+}
 
 /* ---------- sự kiện ---------- */
 $("#autoNext").onclick = ()=>{
@@ -597,7 +732,11 @@ $("#nextCancel").onclick = ()=> clearTimers();
 $("#back").onclick = close_;
 $("#brand").onclick = close_;
 $("#q").oninput = e => { S.q = e.target.value; S.hienThi = BUOC; renderGrid(); };
-document.addEventListener("keydown", e => { if(e.key==="Escape" && document.body.classList.contains("view-detail")) close_(); });
+document.addEventListener("keydown", e => {
+  if(e.key !== "Escape") return;
+  if($("#uhModal").classList.contains("on")) return $("#uhModal").classList.remove("on");
+  if(document.body.classList.contains("view-detail")) close_();
+});
 
 /* ---------- nạp dữ liệu ---------- */
 function baoLoi(tieuDe, chiTiet){
@@ -627,7 +766,9 @@ async function napDuLieu(){
   PHIM = PHIM.filter(p => p.tap.length);
   THE_LOAI = ["Tất cả", ...new Set(PHIM.map(p => p.theLoai).filter(Boolean))];
   renderHero(); renderLatest(); renderChips(); renderGrid();
+  napLuotXem();
 }
+napCauHinh();
 napDuLieu();
 </script>
 </body>

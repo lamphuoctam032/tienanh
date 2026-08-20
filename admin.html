@@ -118,6 +118,7 @@ code{background:#DFE0DB;padding:1px 5px;border-radius:2px;font-family:"Roboto Mo
     <button class="btn btn-ghost" id="openBtn">Mở file từ máy</button>
     <button class="btn btn-ghost" id="loadBtn">Nạp lại từ web</button>
     <input type="file" id="fileIn" accept=".json,application/json" hidden>
+    <button class="btn btn-ghost" id="trangBtn">♥ Ủng hộ & bình luận</button>
     <button class="btn btn-ghost" id="cfgBtn" title="Cài đặt kết nối GitHub">⚙</button>
     <button class="btn btn-ghost" id="dlBtn">↓ Tải về máy</button>
     <button class="btn btn-solid" id="saveBtn">☁ Lưu lên web</button>
@@ -192,6 +193,35 @@ code{background:#DFE0DB;padding:1px 5px;border-radius:2px;font-family:"Roboto Mo
       <p>4. Mục <b>Permissions</b> → <b>Repository permissions</b> → tìm dòng <b>Contents</b>, đổi thành <b>Read and write</b>. Chỉ cần đúng một quyền này thôi.</p>
       <p>5. Bấm Generate, chép chuỗi hiện ra rồi dán vào ô trên. Chuỗi đó chỉ hiện một lần duy nhất.</p>
     </details>
+  </div>
+</div>
+
+<div class="modal" id="trangCfg">
+  <div class="veil" data-y></div>
+  <div class="sheet">
+    <button class="xx" data-y aria-label="Đóng">×</button>
+    <div class="eyebrow">Cài đặt trang</div>
+    <h2 class="display" style="font-size:22px;margin:8px 0 14px">Ủng hộ &amp; bình luận</h2>
+
+    <div class="eyebrow" style="margin-bottom:10px">Nút ủng hộ Momo</div>
+    <div class="f2">
+      <div><label>Số điện thoại Momo</label><input id="tMomoSo" placeholder="09xxxxxxxx"></div>
+      <div><label>Tên chủ tài khoản</label><input id="tMomoTen" placeholder="NGUYEN VAN A"></div>
+    </div>
+    <div class="f1"><label>Ảnh mã QR (tải ảnh lên kho rồi ghi đường dẫn)</label>
+      <input id="tMomoQR" placeholder="anh/momo.png"></div>
+    <div class="f1"><label>Lời nhắn trong hộp ủng hộ</label>
+      <textarea id="tLoi" placeholder="Để trống thì dùng lời mặc định"></textarea></div>
+
+    <div class="eyebrow" style="margin:18px 0 10px">Bình luận lưu vĩnh viễn (Supabase)</div>
+    <div class="f1"><label>Project URL</label><input id="tSupaUrl" placeholder="https://abcxyz.supabase.co"></div>
+    <div class="f1"><label>Khoá anon public</label><input id="tSupaKey" placeholder="eyJhbGci…"></div>
+    <p style="font-size:12.5px;color:var(--ink-60);margin:0 0 16px">
+      Khoá anon vốn được thiết kế để công khai, dán vào đây là bình thường. Đừng dùng khoá service_role.
+    </p>
+    <button class="btn btn-solid" id="tLuu" style="width:100%;justify-content:center">Lưu cài đặt trang</button>
+    <p style="font-size:12.5px;color:var(--ink-30);margin:10px 0 0;text-align:center">
+      Bấm xong nhớ bấm tiếp ☁ Lưu lên web ở thanh trên.</p>
   </div>
 </div>
 
@@ -366,6 +396,33 @@ async function nap(){
   render(); BAN_NHAP = false;
 }
 
+/* ---------- cài đặt trang: ủng hộ + bình luận ---------- */
+let CFG = { momoSo:"", momoTen:"", momoQR:"", loiCamOn:"", supaUrl:"", supaKey:"" };
+async function napCfg(){
+  try{
+    const r = await fetch("cauhinh.json?v=" + Date.now());
+    if(r.ok) Object.assign(CFG, await r.json());
+  }catch(e){}
+}
+function moTrang(){
+  $("#tMomoSo").value = CFG.momoSo || ""; $("#tMomoTen").value = CFG.momoTen || "";
+  $("#tMomoQR").value = CFG.momoQR || ""; $("#tLoi").value = CFG.loiCamOn || "";
+  $("#tSupaUrl").value = CFG.supaUrl || ""; $("#tSupaKey").value = CFG.supaKey || "";
+  $("#trangCfg").classList.add("on");
+}
+$("#trangBtn").onclick = moTrang;
+document.querySelectorAll("#trangCfg [data-y]").forEach(el => el.onclick = ()=> $("#trangCfg").classList.remove("on"));
+$("#tLuu").onclick = ()=>{
+  CFG = {
+    momoSo: $("#tMomoSo").value.trim(), momoTen: $("#tMomoTen").value.trim(),
+    momoQR: $("#tMomoQR").value.trim(), loiCamOn: $("#tLoi").value.trim(),
+    supaUrl: $("#tSupaUrl").value.trim().replace(/\/+$/,""), supaKey: $("#tSupaKey").value.trim()
+  };
+  BAN_NHAP = true;
+  $("#trangCfg").classList.remove("on");
+  toast("Đã ghi nhận. Bấm ☁ Lưu lên web để đưa lên.");
+};
+
 /* ---------- mo file phim.json tu may ---------- */
 function dungDuLieu(d, nguon){
   if(!Array.isArray(d)) throw new Error("File này không phải danh sách phim.");
@@ -400,7 +457,7 @@ $("#loc").oninput = e => { LOC = e.target.value; render(); };
 $("#mo").onclick  = ()=>{ DATA.forEach(p=>p._open=true);  render(); };
 $("#gap").onclick = ()=>{ DATA.forEach(p=>p._open=false); render(); };
 $("#addPhim").onclick = ()=>{ DATA.push({...phimMoi(), _open:true}); render(); window.scrollTo(0,document.body.scrollHeight); };
-$("#loadBtn").onclick = ()=>{ if(confirm("Nạp lại từ file trên web? Thay đổi chưa tải về sẽ mất.")) nap(); };
+$("#loadBtn").onclick = ()=>{ if(confirm("Nạp lại từ file trên web? Thay đổi chưa tải về sẽ mất.")) napCfg().then(nap); };
 $("#dlBtn").onclick = tai;
 $("#dlBtn2").onclick = tai;
 $("#copyBtn").onclick = async ()=>{
@@ -465,25 +522,26 @@ function b64(chuoi){
   return btoa(bin);
 }
 
+async function ghiFile(duongDan, noiDung, loiNhan){
+  const api = `https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${duongDan}`;
+  const h = { Authorization:"Bearer "+GH.token, Accept:"application/vnd.github+json" };
+  let sha = null;
+  const g = await fetch(`${api}?ref=${GH.branch}&t=${Date.now()}`, { headers:h });
+  if(g.ok) sha = (await g.json()).sha;
+  else if(g.status !== 404) throw new Error(giaiThichLoi(g.status));
+  const r = await fetch(api, {
+    method:"PUT", headers:{...h, "Content-Type":"application/json"},
+    body: JSON.stringify({ message: loiNhan, content: b64(noiDung), branch: GH.branch, ...(sha ? {sha} : {}) })
+  });
+  if(!r.ok) throw new Error(giaiThichLoi(r.status));
+}
+
 async function luuLenWeb(btn){
   if(!GH.token || !GH.owner || !GH.repo){ moCaiDat(); return toast("Điền cài đặt GitHub trước đã."); }
   const cu = btn.textContent; btn.textContent = "Đang lưu…"; btn.disabled = true;
-  const api = `https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}`;
-  const h = { Authorization:"Bearer "+GH.token, Accept:"application/vnd.github+json" };
   try{
-    let sha = null;
-    const g = await fetch(`${api}?ref=${GH.branch}&t=${Date.now()}`, { headers:h });
-    if(g.ok) sha = (await g.json()).sha;
-    else if(g.status !== 404) throw new Error(giaiThichLoi(g.status));
-
-    const r = await fetch(api, {
-      method:"PUT", headers:{...h, "Content-Type":"application/json"},
-      body: JSON.stringify({
-        message: `Cập nhật danh sách phim (${DATA.length} phim)`,
-        content: b64(xuat()), branch: GH.branch, ...(sha ? {sha} : {})
-      })
-    });
-    if(!r.ok) throw new Error(giaiThichLoi(r.status));
+    await ghiFile(GH.path, xuat(), `Cập nhật danh sách phim (${DATA.length} phim)`);
+    await ghiFile("cauhinh.json", JSON.stringify(CFG, null, 2), "Cập nhật cài đặt trang");
     BAN_NHAP = false;
     $("#status").innerHTML = `<b class="ok">Đã lưu lên web.</b> Khoảng một phút nữa trang sẽ hiện bản mới — nhớ bấm Ctrl+F5.`;
     toast("Lưu xong. Không cần tải file nữa.");
@@ -496,7 +554,7 @@ $("#saveBtn2").onclick = e => luuLenWeb(e.currentTarget);
 
 window.addEventListener("beforeunload", e => { if(BAN_NHAP){ e.preventDefault(); e.returnValue = ""; } });
 
-nap();
+napCfg().then(nap);
 </script>
 <datalist id="tl">
   <option value="Tu tiên"><option value="Xuyên không"><option value="Huyền huyễn">
