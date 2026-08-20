@@ -285,5 +285,37 @@
         "anh": ""
       }
     ]
+  },
+  {
+    "id": "bi-dao-than-cot-ta-tro-lai-va-mat-ca-hoa",
+    "ten": "Bị Đào Thần Cốt, Ta Trở Lại Vả Mặt Cả Hoàng Tộc",
+    "theLoai": "Tu tiên",
+    "nam": 2026,
+    "noiBat": false,
+    "anh": "anh/bi-dao-than-cot.webp",
+    "moTa": "câu chuyện về Tiêu Bán Khê - một thiên tài Quỷ Y trọng sinh từ vực thẳm. Sau khi bị gia đình phản bội và đào đi thần cốt, nàng đã trở lại với sức mạnh thánh cốt và sự bảo hộ của Ma Tôn bá đạo. Hãy cùng xem hành trình vả mặt cực gắt, thu phục thần thú và tìm lại thân phận Thánh nữ của nàng trong video này!\n",
+    "tap": [
+      {
+        "ten": "Phần 01-1",
+        "dm": "xazbine",
+        "phut": "58:49",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 01-2",
+        "dm": "xazbini",
+        "phut": "58:27",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 01-3",
+        "dm": "xazbina",
+        "phut": "1:06:48",
+        "ngay": "20/8/2026",
+        "anh": ""
+      }
+    ]
   }
 ]
