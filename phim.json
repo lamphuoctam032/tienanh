@@ -168,5 +168,37 @@
         "anh": ""
       }
     ]
+  },
+  {
+    "id": "xuyen-thu-thanh-nu-phu-phao-hoi-ta-nghic",
+    "ten": "Xuyên Thư Thành Nữ Phụ Pháo Hôi, Ta Nghịch Thiên Cải Mệnh Khiến Nữ Chính Khóc Thét",
+    "theLoai": "Tu tiên",
+    "nam": 2026,
+    "noiBat": false,
+    "anh": "anh/xuyen-thu-thanh-nu-phu-phao-hoi-ta-nghich-thien-kh.webp",
+    "moTa": "Khám phá hành trình nghịch thiên của Diệp Linh Lung khi xuyên không thành nữ phụ pháo hôi trong thế giới tu tiên. Thay vì chấp nhận số phận bi thảm, cô gia nhập Thanh Huyền Tông - nơi hội tụ những cao thủ ẩn danh. Với trí tuệ hiện đại và sự lém lỉnh, cô đã thu phục những linh thú bá đạo, luyện thành công pháp thượng cổ và khiến cả giới tu chân phải kinh ngạc. Cùng theo dõi những màn vả mặt cực gắt và những tình huống hài hước khó đỡ trong video này!\n",
+    "tap": [
+      {
+        "ten": "Phần 01-1",
+        "dm": "xazakmq",
+        "phut": "01:20:29",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 01-2",
+        "dm": "xazakmm",
+        "phut": "58:19",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 01-3",
+        "dm": "xazakmu",
+        "phut": "59:17",
+        "ngay": "20/8/2026",
+        "anh": ""
+      }
+    ]
   }
 ]
