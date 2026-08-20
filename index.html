@@ -89,8 +89,16 @@ section{padding:clamp(26px,4vw,46px) 0}
 .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:16px}
 .sec-head h2{margin:0;font-size:clamp(18px,2.2vw,26px)}
 .sec-head h2 em{font-style:normal;color:var(--gold)}
+.railwrap{position:relative}
 .rail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:6px;
-  scrollbar-width:none;-ms-overflow-style:none}
+  scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none}
+.rnav{position:absolute;top:0;bottom:26px;width:52px;z-index:5;display:none;align-items:center;
+  justify-content:center;font-size:30px;line-height:1;color:var(--tx);transition:.16s;padding-bottom:6px}
+.rnav.prev{left:-14px;background:linear-gradient(to right,var(--bg) 40%,transparent)}
+.rnav.next{right:-14px;background:linear-gradient(to left,var(--bg) 40%,transparent)}
+.rnav:hover{color:var(--gold)}
+.rnav[disabled]{opacity:0;pointer-events:none}
+@media(hover:hover) and (min-width:1001px){ .rnav{display:flex} }
 .rail::-webkit-scrollbar{display:none}
 .rail>*{flex:none;scroll-snap-align:start}
 .epcard{width:150px;text-align:left}
@@ -300,7 +308,11 @@ footer .fl{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
   <div class="wrap">
     <section>
       <div class="sec-head"><h2 class="display">Mới <em>cập nhật</em></h2><span class="eyebrow">vuốt ngang</span></div>
-      <div class="rail" id="rail"></div>
+      <div class="railwrap">
+        <button class="rnav prev" id="railPrev" aria-label="Lùi lại">‹</button>
+        <div class="rail" id="rail"></div>
+        <button class="rnav next" id="railNext" aria-label="Tiếp theo">›</button>
+      </div>
     </section>
 
     <section>
@@ -498,6 +510,7 @@ function renderLatest(){
       <h4>${esc(r.p.ten)}</h4><p>${esc(r.p.theLoai)} · ${esc(r.t.ngay||"")}</p></button>`;
   }).join("");
   $("#rail").querySelectorAll(".epcard").forEach(b=> b.onclick = ()=> open_(b.dataset.p, +b.dataset.i));
+  capNhatNutRail();
 }
 
 function renderChips(){
@@ -524,6 +537,21 @@ function renderGrid(){
     </button>`).join("");
   $("#grid").querySelectorAll(".card").forEach(b=> b.onclick = ()=> open_(b.dataset.id, 0));
 }
+
+function capNhatNutRail(){
+  const r = $("#rail");
+  const con = r.scrollWidth - r.clientWidth - Math.ceil(r.scrollLeft);
+  $("#railPrev").disabled = r.scrollLeft < 8;
+  $("#railNext").disabled = con < 8;
+}
+function cuonRail(huong){
+  const r = $("#rail");
+  r.scrollBy({ left: huong * Math.max(220, r.clientWidth * 0.8), behavior:"smooth" });
+}
+$("#railPrev").onclick = ()=> cuonRail(-1);
+$("#railNext").onclick = ()=> cuonRail(1);
+$("#rail").addEventListener("scroll", capNhatNutRail, {passive:true});
+addEventListener("resize", capNhatNutRail);
 
 /* ---------- chi tiết ---------- */
 function curP(){ return phim(S.phimId); }
