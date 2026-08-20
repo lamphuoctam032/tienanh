@@ -221,5 +221,37 @@
         "anh": ""
       }
     ]
+  },
+  {
+    "id": "nu-chinh-xuyen-khong-gia-nhap-mon-phai-l",
+    "ten": " Nữ Chính Xuyên Không Gia Nhập Môn Phái Lầy Lội Nhất",
+    "theLoai": "Tu tiên",
+    "nam": 2026,
+    "noiBat": false,
+    "anh": "anh/nu-chinh-xuyen-khong-gia-nhap-mon-phai-lay-loi-nha.webp",
+    "moTa": "Giang Ninh, một cô gái bị gia tộc bóc lột nhưng đã xuyên không và trở thành đồ đệ của Lăng Vân Tông. Với tính cách lém lỉnh và sự bảo vệ của các sư huynh 'bá đạo', cô đã vạch trần bộ mặt thật của chị gái Giang Uyển. Cùng xem màn nghịch tập đỉnh cao này nhé!\n",
+    "tap": [
+      {
+        "ten": "Phần 01-1",
+        "dm": "xazayfy",
+        "phut": "48:27",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 01-2",
+        "dm": "xazayfu",
+        "phut": "1:02:02",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 01-3",
+        "dm": "xazayfq",
+        "phut": "45:50",
+        "ngay": "20/8/2026",
+        "anh": ""
+      }
+    ]
   }
 ]
