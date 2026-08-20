@@ -92,14 +92,14 @@ section{padding:clamp(26px,4vw,46px) 0}
   scrollbar-width:none;-ms-overflow-style:none}
 .rail::-webkit-scrollbar{display:none}
 .rail>*{flex:none;scroll-snap-align:start}
-.epcard{width:250px;text-align:left}
-.epcard .sh{position:relative;aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;background:#0E1218}
-.epcard img{width:100%;height:100%;object-fit:cover}
-.epcard .dur{position:absolute;right:6px;bottom:6px;background:rgba(8,10,14,.85);color:#fff;
-  font-family:"Roboto Mono",monospace;font-size:10px;padding:2px 5px;border-radius:2px}
-.epcard h4{margin:9px 0 2px;font-size:13.5px;font-weight:500;line-height:1.32;
+.epcard{width:150px;text-align:left}
+.epcard .poster{margin:0}
+.epcard .bdg{background:#12161C;color:var(--gold);border:1px solid var(--gold-dim);font-weight:500}
+.epcard .dur{position:absolute;right:6px;top:6px;background:rgba(8,10,14,.82);color:#D9DEE6;
+  font-family:"Roboto Mono",monospace;font-size:9.5px;padding:2px 5px;border-radius:2px}
+.epcard h4{margin:9px 0 2px;font-size:13px;font-weight:500;line-height:1.32;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.epcard p{margin:0;font-size:11.5px;color:var(--tx3)}
+.epcard p{margin:0;font-size:11px;color:var(--tx3)}
 
 /* ---------- lưới phim ---------- */
 .chips{display:flex;gap:8px;margin-bottom:18px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
@@ -444,16 +444,17 @@ function toast(m){ const t=$("#toast"); t.textContent=m; t.classList.add("on"); 
 
 /* ảnh: ưu tiên ảnh bìa tự đặt, không có thì lấy thumbnail Dailymotion */
 const anhPhim = p => p.anh || dmThumb((p.tap[0]||{}).dm) || "";
-const anhTap  = t => t.anh || dmThumb(t.dm) || "";
 
-function posterHTML(p){
-  const url = anhPhim(p), riêng = !!p.anh;
-  if(!url) return `<div class="none">CHƯA CÓ ẢNH</div><div class="bdg">${p.tap.length} phần</div>`;
+/* khung poster dùng chung: nhãn góc trên do nơi gọi quyết định */
+function posterHTML(p, nhan, luotXem, them){
+  const url = anhPhim(p), rieng = !!p.anh;
+  const bdg = nhan ? `<div class="bdg">${esc(nhan)}</div>` : "";
+  if(!url) return `<div class="none">CHƯA CÓ ẢNH</div>${bdg}${them||""}`;
   return `<div class="pbg" style="background-image:url('${esc(url)}')"></div>
-    <img class="pimg ${riêng?"cover":"contain"}" src="${esc(url)}" alt="" loading="lazy">
+    <img class="pimg ${rieng?"cover":"contain"}" src="${esc(url)}" alt="" loading="lazy">
     <div class="shade"></div>
-    <div class="bdg">${p.tap.length} phần</div>
-    ${vwHTML(xemPhim(p))}
+    ${bdg}${them||""}
+    ${vwHTML(luotXem)}
     <div class="play-ov"><span>▶</span></div>`;
 }
 
@@ -467,7 +468,7 @@ function renderHero(){
   $("#heroLog").textContent = p.moTa || "";
   $("#heroMeta").innerHTML = `<span class="pill g">${esc(p.theLoai)}</span>
     <span class="pill">${p.tap.length} phần</span><span class="pill">${p.nam}</span>`;
-  $("#heroPoster").innerHTML = posterHTML(p);
+  $("#heroPoster").innerHTML = posterHTML(p, p.tap.length + " phần", xemPhim(p));
   $("#heroPlay").onclick = ()=> open_(p.id, 0);
   $("#heroList").onclick = ()=> open_(p.id, 0);
 }
@@ -477,11 +478,10 @@ function renderLatest(){
   PHIM.forEach(p => p.tap.forEach((t,i)=> rows.push({p,t,i})));
   rows.reverse();
   $("#rail").innerHTML = rows.slice(0,14).map(r=>{
-    const u = anhTap(r.t) || anhPhim(r.p);
+    const dur = `<div class="dur">${esc(r.t.phut)}</div>`;
     return `<button class="epcard" data-p="${esc(r.p.id)}" data-i="${r.i}">
-      <div class="sh">${u?`<img src="${esc(u)}" alt="" loading="lazy">`:""}
-        <div class="dur">${esc(r.t.phut)}</div><div class="play-ov"><span>▶</span></div></div>
-      <h4>${esc(r.p.ten)}</h4><p>${esc(r.t.ten)}${fmtXem(xemTap(r.t))?" · "+fmtXem(xemTap(r.t))+" lượt xem":" · "+esc(r.p.theLoai)}</p></button>`;
+      <div class="poster">${posterHTML(r.p, r.t.ten, xemTap(r.t), dur)}</div>
+      <h4>${esc(r.p.ten)}</h4><p>${esc(r.p.theLoai)} · ${esc(r.t.ngay||"")}</p></button>`;
   }).join("");
   $("#rail").querySelectorAll(".epcard").forEach(b=> b.onclick = ()=> open_(b.dataset.p, +b.dataset.i));
 }
@@ -504,7 +504,7 @@ function renderGrid(){
   if($("#moreBtn")) $("#moreBtn").onclick = ()=>{ S.hienThi += BUOC; renderGrid(); };
   $("#grid").innerHTML = hien.map(p=>`
     <button class="card" data-id="${esc(p.id)}">
-      <div class="poster">${posterHTML(p)}</div>
+      <div class="poster">${posterHTML(p, p.tap.length + " phần", xemPhim(p))}</div>
       <h3>${esc(p.ten)}</h3>
       <div class="cm">${esc(p.theLoai)} · ${p.nam}</div>
     </button>`).join("");
