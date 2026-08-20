@@ -5,7 +5,7 @@
     "theLoai": "Tu tiên",
     "nam": 2026,
     "noiBat": false,
-    "anh": "",
+    "anh": "anh/khi-dai-phan-phai-co-tri-tue-dinh-cao-03.webp",
     "moTa": "Cổ Tiền, một người xuyên không trở thành tộc trưởng phản phái của Cổ Tộc Trường Sinh. Với trí tuệ vượt trội, anh đã vạch trần bộ mặt thật của kẻ được gọi là 'khí vận chi tử' và thay đổi hoàn toàn vận mệnh của mình. Một bộ phim tiên hiệp đầy kịch tính với những màn đấu trí và đấu pháp đỉnh cao.",
     "tap": [
       {
@@ -36,8 +36,8 @@
     "ten": "Nữ Chính Lầy Lội Nhất Tu Tiên Giới | Xích Miểu Truyện",
     "theLoai": "Tu tiên",
     "nam": 2026,
-    "noiBat": false,
-    "anh": "",
+    "noiBat": true,
+    "anh": "anh/xich-mieu-truyen.webp",
     "moTa": "Khám phá hành trình tu tiên độc nhất vô nhị của Xích Miểu - một cô gái mang lời nguyền chết chóc nhưng sở hữu tính cách lầy lội vô đối. Từ việc dùng kiến thức khoa học để thu phục công đức đến việc 'vả mặt' các đại năng, Xích Miểu sẽ khiến bạn không thể rời mắt khỏi màn hình.\n",
     "tap": [
       {
@@ -111,7 +111,7 @@
     "theLoai": "Tu tiên",
     "nam": 2026,
     "noiBat": false,
-    "anh": "",
+    "anh": "anh/nu-chinh-xuyen-khong-tu-tien-tau-hai.webp",
     "moTa": "Hứa Khiêm Hoa và cô bạn thân cùng xuyên không về thế giới tu tiên cổ đại. Một người làm đệ tử phế vật đột biến linh căn, một người làm lão bà Chưởng môn tối cao. Cùng nhau, họ quậy đục nước gián điệp hệ thống của Thái tử Trần Hạo Giản và tạo nên những tình huống dở khóc dở cười.\n",
     "tap": [
       {
@@ -132,6 +132,24 @@
         "ten": "Phần 01-3",
         "dm": "xaz0sr6",
         "phut": "38:07",
+        "ngay": "20/8/2026",
+        "anh": ""
+      }
+    ]
+  },
+  {
+    "id": "phim-moi",
+    "ten": "Phim mới",
+    "theLoai": "Tu tiên",
+    "nam": 2026,
+    "noiBat": false,
+    "anh": "",
+    "moTa": "",
+    "tap": [
+      {
+        "ten": "Phần 01",
+        "dm": "",
+        "phut": "00:00",
         "ngay": "20/8/2026",
         "anh": ""
       }
