@@ -253,5 +253,37 @@
         "anh": ""
       }
     ]
+  },
+  {
+    "id": "xuyen-khong-ta-hack-tu-vi-sieu-toc-khien",
+    "ten": "Xuyên Không Ta Hack Tu Vi Siêu Tốc Khiến Sư Phụ Khóc Thét",
+    "theLoai": "Tu tiên",
+    "nam": 2026,
+    "noiBat": false,
+    "anh": "anh/xuyenkhongtahacktuvi.webp",
+    "moTa": "cô gái xuyên không mang Thiên Phẩm Ngũ Linh Căn nghịch thiên. Từ một phế sài bị khinh rẻ, cô liên tục phá kỷ lục tu luyện, thu phục thần thú vạn năm và đại náo Ma Cốc để cứu đồng môn. Hãy cùng theo dõi hành trình vả mặt cực căng của nữ cường giả Phù Tang Tông!\n",
+    "tap": [
+      {
+        "ten": "Phần 01-1",
+        "dm": "xazb2gy",
+        "phut": "42:43",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 01-2",
+        "dm": "xazb2gu",
+        "phut": "46:02",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 01-3",
+        "dm": "xazb2gq",
+        "phut": "47:11",
+        "ngay": "20/8/2026",
+        "anh": ""
+      }
+    ]
   }
 ]
