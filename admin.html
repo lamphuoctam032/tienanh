@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quản trị — CUỘN·PHIM</title>
+<title>Quản trị — Tiên Ảnh</title>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -103,7 +103,7 @@ code{background:#DFE0DB;padding:1px 5px;border-radius:2px;font-family:"Roboto Mo
 
 <header>
   <div class="wrap bar">
-    <h1 class="display">Quản trị phim</h1>
+    <h1 class="display">Tiên·Ảnh — Quản trị</h1>
     <button class="btn btn-ghost" id="addPhim">+ Thêm phim</button>
     <button class="btn btn-ghost" id="loadBtn">Nạp lại từ web</button>
     <button class="btn btn-solid" id="dlBtn">↓ Tải phim.json</button>
@@ -155,10 +155,12 @@ function slugDuyNhat(ten, boQua){
   while(DATA.some((p,i)=> dung(i) && p.id === s)) s = goc + "-" + (++n);
   return s;
 }
+/* Nhan moi dang: ID tran, link xem, link Studio, link nhung, link rut gon dai.ly */
 const cleanId = v => {
   v = (v||"").trim();
-  const m = v.match(/(?:video\/|^)([a-z0-9]{6,9})(?:[?_].*)?$/i);
-  return m ? m[1] : v;
+  if(!v) return "";
+  const m = v.match(/x[a-z0-9]{5,8}/i);
+  return m ? m[0].toLowerCase() : v;
 };
 const okId  = v => /^x[a-z0-9]{5,8}$/i.test(v);
 const okDur = v => /^\d{1,2}:\d{2}(:\d{2})?$/.test(v);
