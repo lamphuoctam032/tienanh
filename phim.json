@@ -30,5 +30,79 @@
         "anh": ""
       }
     ]
+  },
+  {
+    "id": "nu-chinh-lay-loi-nhat-tu-tien-gioi-xich-",
+    "ten": "Nữ Chính Lầy Lội Nhất Tu Tiên Giới | Xích Miểu Truyện",
+    "theLoai": "Tu tiên",
+    "nam": 2026,
+    "noiBat": false,
+    "anh": "",
+    "moTa": "Khám phá hành trình tu tiên độc nhất vô nhị của Xích Miểu - một cô gái mang lời nguyền chết chóc nhưng sở hữu tính cách lầy lội vô đối. Từ việc dùng kiến thức khoa học để thu phục công đức đến việc 'vả mặt' các đại năng, Xích Miểu sẽ khiến bạn không thể rời mắt khỏi màn hình.\n",
+    "tap": [
+      {
+        "ten": "Phần 01-1",
+        "dm": "xayx3cm",
+        "phut": "54:05",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 01-2",
+        "dm": "xayyylm",
+        "phut": "52:38",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 01-3",
+        "dm": "xayzsjy",
+        "phut": "39:14",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 02-1",
+        "dm": "xaz072m",
+        "phut": "51:54",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 02-2",
+        "dm": "xaz0dpe",
+        "phut": "01:04:54",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 02-3",
+        "dm": "xaz0epu",
+        "phut": "53:17",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 03-1",
+        "dm": "xaz0mw2",
+        "phut": "56:50",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 03-2",
+        "dm": "xaz0mw6",
+        "phut": "59:32",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 03-3",
+        "dm": "xaz0mvy",
+        "phut": "56:37",
+        "ngay": "20/8/2026",
+        "anh": ""
+      }
+    ]
   }
 ]
