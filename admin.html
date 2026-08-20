@@ -74,6 +74,16 @@ main{padding:24px 0 60px}
 .status{flex:1;font-size:13px;color:var(--ink-60);min-width:200px}
 .status b.ok{color:var(--ok)}
 .status b.err{color:var(--warn)}
+.modal{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.modal .veil{position:absolute;inset:0;background:rgba(16,20,24,.55)}
+.modal .sheet{position:relative;background:var(--paper);border:1px solid var(--ink);border-radius:var(--radius);
+  width:min(560px,100%);max-height:88vh;overflow:auto;padding:24px}
+.modal .xx{position:absolute;top:10px;right:14px;font-size:22px;line-height:1;color:var(--ink-60)}
+.drop{position:fixed;inset:0;z-index:80;display:none;place-items:center;background:rgba(16,20,24,.72);
+      color:#F2F2EE;font-size:18px;text-align:center;padding:24px}
+.drop.on{display:grid}
+.drop div{border:2px dashed rgba(242,242,238,.6);border-radius:4px;padding:40px 50px}
 .toast{position:fixed;left:50%;bottom:80px;transform:translate(-50%,16px);z-index:99;background:var(--ink);
        color:var(--paper);padding:10px 17px;border-radius:2px;font-size:14px;opacity:0;pointer-events:none;transition:.2s}
 .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -105,14 +115,19 @@ code{background:#DFE0DB;padding:1px 5px;border-radius:2px;font-family:"Roboto Mo
   <div class="wrap bar">
     <h1 class="display">Tiên·Ảnh — Quản trị</h1>
     <button class="btn btn-ghost" id="addPhim">+ Thêm phim</button>
+    <button class="btn btn-ghost" id="openBtn">Mở file từ máy</button>
     <button class="btn btn-ghost" id="loadBtn">Nạp lại từ web</button>
-    <button class="btn btn-solid" id="dlBtn">↓ Tải phim.json</button>
+    <input type="file" id="fileIn" accept=".json,application/json" hidden>
+    <button class="btn btn-ghost" id="cfgBtn" title="Cài đặt kết nối GitHub">⚙</button>
+    <button class="btn btn-ghost" id="dlBtn">↓ Tải về máy</button>
+    <button class="btn btn-solid" id="saveBtn">☁ Lưu lên web</button>
   </div>
 </header>
 
 <div class="wrap intro">
   Điền vào các ô bên dưới, bấm <b>Tải phim.json</b>, rồi kéo file đó lên GitHub đè lên file cũ.
   Không phải đụng vào một dòng mã nào. Trang này chỉ chạy trên máy bạn, không ai khác sửa được nội dung.
+  <br>Làm dở muốn nghỉ? Bấm <b>Tải phim.json</b> để giữ lại, lần sau bấm <b>Mở file từ máy</b> là làm tiếp được.
 </div>
 
 <main class="wrap">
@@ -136,10 +151,51 @@ code{background:#DFE0DB;padding:1px 5px;border-radius:2px;font-family:"Roboto Mo
   <div class="wrap in">
     <div class="status" id="status">Đang nạp…</div>
     <button class="btn btn-ghost btn-sm" id="copyBtn">Sao chép nội dung</button>
-    <button class="btn btn-solid" id="dlBtn2">↓ Tải phim.json</button>
+    <button class="btn btn-ghost btn-sm" id="dlBtn2">↓ Tải về máy</button>
+    <button class="btn btn-solid" id="saveBtn2">☁ Lưu lên web</button>
   </div>
 </div>
 
+<div class="modal" id="cfg">
+  <div class="veil" data-x></div>
+  <div class="sheet">
+    <button class="xx" data-x aria-label="Đóng">×</button>
+    <div class="eyebrow">Kết nối GitHub</div>
+    <h2 class="display" style="font-size:24px;margin:8px 0 12px">Lưu thẳng lên web</h2>
+    <p style="color:var(--ink-60);font-size:13.5px;margin:0 0 16px">
+      Khoá truy cập chỉ nằm trong trình duyệt trên máy này, không gửi đi đâu khác ngoài GitHub
+      và không nằm trong file nào cả. Máy lạ thì đừng lưu.
+    </p>
+    <div class="f2">
+      <div><label>Tài khoản GitHub</label><input id="cOwner" placeholder="lamphuoctam032"></div>
+      <div><label>Tên kho</label><input id="cRepo" placeholder="tienanh"></div>
+    </div>
+    <div class="f2">
+      <div><label>Nhánh</label><input id="cBranch" placeholder="main"></div>
+      <div><label>Tên file dữ liệu</label><input id="cPath" placeholder="phim.json"></div>
+    </div>
+    <div class="f1"><label>Khoá truy cập (Personal access token)</label>
+      <input id="cToken" type="password" placeholder="github_pat_…" autocomplete="off"></div>
+    <label class="row-chk" style="margin-bottom:16px">
+      <input type="checkbox" id="cNho" checked> Nhớ khoá trên máy này
+    </label>
+    <div style="display:flex;gap:9px;flex-wrap:wrap">
+      <button class="btn btn-solid" id="cLuu">Lưu cài đặt</button>
+      <button class="btn btn-ghost" id="cThu">Kiểm tra kết nối</button>
+      <button class="btn btn-ghost btn-danger" id="cXoa">Xoá khoá</button>
+    </div>
+    <details class="help" style="margin-top:16px">
+      <summary>Lấy khoá truy cập ở đâu?</summary>
+      <p>1. Vào <b>github.com</b> → ảnh đại diện → Settings → kéo xuống cuối cột trái, bấm <b>Developer settings</b>.</p>
+      <p>2. Chọn <b>Personal access tokens</b> → <b>Fine-grained tokens</b> → <b>Generate new token</b>.</p>
+      <p>3. Đặt tên bất kỳ, hạn dùng chọn dài. Mục <b>Repository access</b> chọn <b>Only select repositories</b> rồi chọn đúng kho của bạn.</p>
+      <p>4. Mục <b>Permissions</b> → <b>Repository permissions</b> → tìm dòng <b>Contents</b>, đổi thành <b>Read and write</b>. Chỉ cần đúng một quyền này thôi.</p>
+      <p>5. Bấm Generate, chép chuỗi hiện ra rồi dán vào ô trên. Chuỗi đó chỉ hiện một lần duy nhất.</p>
+    </details>
+  </div>
+</div>
+
+<div class="drop" id="drop"><div>Thả file <b>phim.json</b> vào đây</div></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -265,6 +321,7 @@ function bind(){
 }
 
 function check(){
+  BAN_NHAP = true;
   let thieuId=0, saiPhut=0, tong=0;
   DATA.forEach(p=>p.tap.forEach(t=>{ tong++;
     if(!okId(cleanId(t.dm))) thieuId++;
@@ -306,8 +363,38 @@ async function nap(){
     toast("Chưa đọc được phim.json — bắt đầu với một phim trống.");
   }
   DATA.forEach((p,i)=>{ p._open = i===0; p.tap = p.tap||[tapMoi()]; });
-  render();
+  render(); BAN_NHAP = false;
 }
+
+/* ---------- mo file phim.json tu may ---------- */
+function dungDuLieu(d, nguon){
+  if(!Array.isArray(d)) throw new Error("File này không phải danh sách phim.");
+  DATA = d;
+  DATA.forEach((p,i)=>{ p._open = i===0; p.tap = Array.isArray(p.tap)&&p.tap.length ? p.tap : [tapMoi()]; });
+  render();
+  toast(`Đã mở ${DATA.length} phim từ ${nguon}.`);
+}
+function docFile(file){
+  if(!file) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{ dungDuLieu(JSON.parse(r.result), "file trong máy"); }
+    catch(e){ alert("Không đọc được file:\n\n" + e.message); }
+  };
+  r.onerror = () => alert("Không mở được file.");
+  r.readAsText(file, "utf-8");
+}
+$("#openBtn").onclick = ()=> $("#fileIn").click();
+$("#fileIn").onchange = e => { docFile(e.target.files[0]); e.target.value = ""; };
+
+let dem = 0;
+addEventListener("dragenter", e => { e.preventDefault(); if(++dem===1) $("#drop").classList.add("on"); });
+addEventListener("dragover",  e => e.preventDefault());
+addEventListener("dragleave", e => { if(--dem<=0){ dem=0; $("#drop").classList.remove("on"); } });
+addEventListener("drop", e => {
+  e.preventDefault(); dem=0; $("#drop").classList.remove("on");
+  docFile(e.dataTransfer.files[0]);
+});
 
 $("#loc").oninput = e => { LOC = e.target.value; render(); };
 $("#mo").onclick  = ()=>{ DATA.forEach(p=>p._open=true);  render(); };
@@ -320,7 +407,94 @@ $("#copyBtn").onclick = async ()=>{
   try{ await navigator.clipboard.writeText(xuat()); toast("Đã sao chép. Dán đè vào phim.json trên GitHub."); }
   catch(e){ toast("Trình duyệt chặn sao chép — dùng nút tải file nhé."); }
 };
-window.addEventListener("beforeunload", e => { e.preventDefault(); e.returnValue = ""; });
+/* ================= LƯU THẲNG LÊN GITHUB ================= */
+const GH = { owner:"lamphuoctam032", repo:"tienanh", branch:"main", path:"phim.json", token:"" };
+let BAN_NHAP = false;   /* có thay đổi chưa lưu hay không */
+
+function kho(k,v){ try{ return v===undefined ? localStorage.getItem(k) : localStorage.setItem(k,v); }catch(e){ return null; } }
+function xoaKho(k){ try{ localStorage.removeItem(k); }catch(e){} }
+
+(function napCaiDat(){
+  try{
+    const c = JSON.parse(kho("gh_cfg") || "{}");
+    Object.assign(GH, c);
+    GH.token = kho("gh_token") || "";
+  }catch(e){}
+})();
+
+function moCaiDat(){
+  $("#cOwner").value = GH.owner; $("#cRepo").value = GH.repo;
+  $("#cBranch").value = GH.branch; $("#cPath").value = GH.path;
+  $("#cToken").value = GH.token;
+  $("#cfg").classList.add("on");
+}
+function dongCaiDat(){ $("#cfg").classList.remove("on"); }
+$("#cfgBtn").onclick = moCaiDat;
+document.querySelectorAll("#cfg [data-x]").forEach(el => el.onclick = dongCaiDat);
+$("#cLuu").onclick = () => {
+  GH.owner = $("#cOwner").value.trim(); GH.repo = $("#cRepo").value.trim();
+  GH.branch = $("#cBranch").value.trim() || "main"; GH.path = $("#cPath").value.trim() || "phim.json";
+  GH.token = $("#cToken").value.trim();
+  kho("gh_cfg", JSON.stringify({owner:GH.owner, repo:GH.repo, branch:GH.branch, path:GH.path}));
+  if($("#cNho").checked && GH.token) kho("gh_token", GH.token); else xoaKho("gh_token");
+  dongCaiDat(); toast("Đã lưu cài đặt.");
+};
+$("#cXoa").onclick = () => { GH.token=""; xoaKho("gh_token"); $("#cToken").value=""; toast("Đã xoá khoá khỏi máy này."); };
+$("#cThu").onclick = async () => {
+  const t = $("#cToken").value.trim() || GH.token;
+  const o = $("#cOwner").value.trim(), r = $("#cRepo").value.trim();
+  if(!t || !o || !r) return alert("Điền đủ tài khoản, tên kho và khoá đã.");
+  try{
+    const res = await fetch(`https://api.github.com/repos/${o}/${r}`, { headers:{ Authorization:"Bearer "+t, Accept:"application/vnd.github+json" }});
+    if(res.ok) alert("Kết nối tốt. Đã thấy kho " + o + "/" + r + ".");
+    else alert(giaiThichLoi(res.status));
+  }catch(e){ alert("Không gọi được GitHub: " + e.message); }
+};
+
+function giaiThichLoi(code){
+  if(code===401) return "Khoá sai hoặc đã hết hạn. Tạo khoá mới rồi dán lại.";
+  if(code===403) return "Khoá thiếu quyền. Kiểm tra mục Contents đã để Read and write chưa.";
+  if(code===404) return "Không thấy kho hoặc file. Kiểm tra tên tài khoản, tên kho, tên nhánh.\nCũng có thể khoá chưa được cấp quyền vào đúng kho này.";
+  if(code===409) return "File vừa bị sửa ở nơi khác. Bấm Nạp lại từ web rồi làm lại.";
+  return "GitHub trả về lỗi " + code + ".";
+}
+
+function b64(chuoi){
+  const bytes = new TextEncoder().encode(chuoi);
+  let bin = ""; bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin);
+}
+
+async function luuLenWeb(btn){
+  if(!GH.token || !GH.owner || !GH.repo){ moCaiDat(); return toast("Điền cài đặt GitHub trước đã."); }
+  const cu = btn.textContent; btn.textContent = "Đang lưu…"; btn.disabled = true;
+  const api = `https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}`;
+  const h = { Authorization:"Bearer "+GH.token, Accept:"application/vnd.github+json" };
+  try{
+    let sha = null;
+    const g = await fetch(`${api}?ref=${GH.branch}&t=${Date.now()}`, { headers:h });
+    if(g.ok) sha = (await g.json()).sha;
+    else if(g.status !== 404) throw new Error(giaiThichLoi(g.status));
+
+    const r = await fetch(api, {
+      method:"PUT", headers:{...h, "Content-Type":"application/json"},
+      body: JSON.stringify({
+        message: `Cập nhật danh sách phim (${DATA.length} phim)`,
+        content: b64(xuat()), branch: GH.branch, ...(sha ? {sha} : {})
+      })
+    });
+    if(!r.ok) throw new Error(giaiThichLoi(r.status));
+    BAN_NHAP = false;
+    $("#status").innerHTML = `<b class="ok">Đã lưu lên web.</b> Khoảng một phút nữa trang sẽ hiện bản mới — nhớ bấm Ctrl+F5.`;
+    toast("Lưu xong. Không cần tải file nữa.");
+  }catch(e){
+    alert("Lưu không được.\n\n" + e.message);
+  }finally{ btn.textContent = cu; btn.disabled = false; }
+}
+$("#saveBtn").onclick  = e => luuLenWeb(e.currentTarget);
+$("#saveBtn2").onclick = e => luuLenWeb(e.currentTarget);
+
+window.addEventListener("beforeunload", e => { if(BAN_NHAP){ e.preventDefault(); e.returnValue = ""; } });
 
 nap();
 </script>
