@@ -138,18 +138,32 @@
     ]
   },
   {
-    "id": "phim-moi",
-    "ten": "Phim mới",
+    "id": "cong-chua-thien-dinh-bi-day-xuong-tran-g",
+    "ten": "Công Chúa Thiên Đình Bị Đày Xuống Trần Gian Làm Thầy Bói",
     "theLoai": "Tu tiên",
     "nam": 2026,
     "noiBat": false,
-    "anh": "",
-    "moTa": "",
+    "anh": "anh/conchuathiendinh03.webp",
+    "moTa": "Công chúa Thiên đình vì quá tinh nghịch mà bị Ngọc Hoàng đày xuống trần gian. Để trở về trời, cô phải tích lũy công đức bằng cách giúp đỡ con người. Với chút tu vi còn sót lại, Vân Dao hành nghề xem bói, giải oan cho những linh hồn và chữa những căn bệnh lạ cho hoàng tộc. Liệu cô có tích đủ công đức hay sẽ bị Lôi Thần đánh tơi tả trước khi về trời? Cùng theo dõi hành trình hài hước và ý nghĩa của Vân Dao nhé!",
     "tap": [
       {
-        "ten": "Phần 01",
-        "dm": "",
-        "phut": "00:00",
+        "ten": "Phần 01-1",
+        "dm": "xaz9nh2",
+        "phut": "48:05",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 01-2",
+        "dm": "xaz9nha",
+        "phut": "54:44",
+        "ngay": "20/8/2026",
+        "anh": ""
+      },
+      {
+        "ten": "Phần 01-3",
+        "dm": "xaz9ngy",
+        "phut": "55:06",
         "ngay": "20/8/2026",
         "anh": ""
       }
