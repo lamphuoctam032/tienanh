@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#E8E9E4">
 <meta name="mobile-web-app-capable" content="yes">
-<title>CUỘN·PHIM — Review & tóm tắt phim hoạt hình</title>
-<meta name="description" content="Tuyển tập review, tóm tắt phim hoạt hình tu tiên, xuyên không, cổ trang.">
+<title>Tiên Ảnh — Review & tóm tắt phim hoạt hình</title>
+<meta name="description" content="Tiên Ảnh — tuyển tập review, tóm tắt phim hoạt hình tu tiên, xuyên không, cổ trang.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Be+Vietnam+Pro:wght@300;400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -245,7 +245,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 
 <header>
   <div class="wrap bar">
-    <div class="brand" id="brand">Cuộn<span>·</span>Phim</div>
+    <div class="brand" id="brand">Tiên<span>·</span>Ảnh</div>
     <label class="search">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="Tìm phim, thể loại…" autocomplete="off">
@@ -317,6 +317,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
             <button class="switch" id="autoNext" aria-pressed="true"><span class="tr"></span> Tự động chuyển tập</button>
             <button class="btn btn-ghost" id="prevEp">← Tập trước</button>
             <button class="btn btn-ghost" id="nextEp">Tập sau →</button>
+            <a class="btn btn-ghost" id="dmLink" target="_blank" rel="noopener" style="display:none;text-decoration:none">Không xem được? Mở trên Dailymotion ↗</a>
           </div>
         </div>
 
@@ -356,7 +357,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 
 <footer>
   <div class="wrap fl">
-    <div>CUỘN·PHIM — review & tóm tắt phim hoạt hình.</div>
+    <div>TIÊN·ẢNH — review & tóm tắt phim hoạt hình.</div>
     <div class="mono" style="font-size:12px">Video lưu trên Dailymotion</div>
   </div>
 </footer>
@@ -461,13 +462,16 @@ function close_(){ clearTimers(); $("#frameSlot").innerHTML=""; document.body.cl
 function mountPlayer(autoplay){
   const t = curT();
   if(!t.dm){
+    $("#dmLink").style.display = "none";
     $("#frameSlot").innerHTML = `<div class="noid">
       <div style="font-size:15px;font-weight:500">Chưa gắn ID video cho phần này</div>
       <div style="font-size:13px;opacity:.75;max-width:40ch">Mở file, tìm dòng <code>dm: ""</code> của phần này và dán ID Dailymotion vào giữa hai dấu nháy.</div></div>`;
     return;
   }
-  const src = `https://geo.dailymotion.com/player.html?video=${t.dm}&api=postMessage&queue-enable=false${autoplay?"&autoplay=1":""}`;
+  const src = `https://geo.dailymotion.com/player.html?video=${t.dm}${autoplay?"&autoplay=1":""}`;
   $("#frameSlot").innerHTML = `<iframe src="${src}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="${curP().ten} — ${t.ten}"></iframe>`;
+  $("#dmLink").href = "https://www.dailymotion.com/video/" + t.dm;
+  $("#dmLink").style.display = "inline-flex";
   startWatch();
 }
 
