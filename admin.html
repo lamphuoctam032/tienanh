@@ -43,6 +43,7 @@ main{padding:24px 0 60px}
 .kr{border:1px solid var(--rule);border-radius:var(--r);padding:11px;margin-bottom:9px;background:#F3F3F0}
 .kr .kt{display:flex;gap:8px;align-items:center;margin-bottom:8px}
 .kr .kt input{flex:1}
+.kr textarea{min-height:62px;font-size:13px}
 .kr .kx{flex:none;width:32px;height:32px;display:grid;place-items:center;border:1px solid var(--rule);
   border-radius:2px;color:var(--warn);font-size:15px}
 .kr .kx:hover{background:var(--warn);color:#fff;border-color:var(--warn)}
@@ -439,10 +440,27 @@ function veKenhAdmin(){
       </div>
       <input data-k="mota" data-i="${i}" value="${escA(k.mota)}" placeholder="Mô tả ngắn (tuỳ chọn)" style="margin-top:8px">
       <input data-k="anh" data-i="${i}" value="${escA(k.anh)}" placeholder="Ảnh đại diện, ví dụ anh/kenh1.jpg (tuỳ chọn)" style="margin-top:8px">
+      <label style="margin:10px 0 4px">Link video hiện dưới kênh — mỗi dòng một link, tối đa 12</label>
+      <textarea data-kv="${i}" rows="3" placeholder="https://youtu.be/xxxxxxxxxxx&#10;https://www.dailymotion.com/video/xxxxxxx">${escA((k.video||[]).join("\n"))}</textarea>
+      <label class="row-chk" style="margin-top:8px;${(k.nenTang==="dailymotion")?"":"display:none"}">
+        <input type="checkbox" data-kt="${i}" ${k.tuDong?"checked":""}> Tự lấy video mới nhất từ kênh này
+      </label>
     </div>`).join("");
   $("#kenhList").querySelectorAll("[data-k]").forEach(el=>{
-    const ghi = ()=> { CFG.kenh[+el.dataset.i][el.dataset.k] = el.value; };
+    const ghi = ()=> {
+      CFG.kenh[+el.dataset.i][el.dataset.k] = el.value;
+      if(el.dataset.k === "nenTang") veKenhAdmin();
+    };
     el.oninput = ghi; el.onchange = ghi;
+  });
+  $("#kenhList").querySelectorAll("[data-kv]").forEach(el=>{
+    el.oninput = ()=> {
+      CFG.kenh[+el.dataset.kv].video =
+        el.value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).slice(0,12);
+    };
+  });
+  $("#kenhList").querySelectorAll("[data-kt]").forEach(el=>{
+    el.onchange = ()=> { CFG.kenh[+el.dataset.kt].tuDong = el.checked; };
   });
   $("#kenhList").querySelectorAll("[data-xk]").forEach(b=>{
     b.onclick = ()=> { CFG.kenh.splice(+b.dataset.xk,1); veKenhAdmin(); };
@@ -450,7 +468,7 @@ function veKenhAdmin(){
   $("#themKenh").style.display = ds.length >= 12 ? "none" : "inline-flex";
 }
 function escA(v){ return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;"); }
-$("#themKenh").onclick = ()=>{ (CFG.kenh ||= []).push({ten:"",url:"",mota:"",anh:"",nenTang:"youtube"}); veKenhAdmin(); };
+$("#themKenh").onclick = ()=>{ (CFG.kenh ||= []).push({ten:"",url:"",mota:"",anh:"",nenTang:"youtube",video:[],tuDong:false}); veKenhAdmin(); };
 
 function moTrang(){
   $("#tMomoSo").value = CFG.momoSo || ""; $("#tMomoTen").value = CFG.momoTen || "";
@@ -467,7 +485,9 @@ $("#tLuu").onclick = ()=>{
   const kenh = (CFG.kenh || [])
     .map(k => ({ ten:(k.ten||"").trim(), url:(k.url||"").trim(), mota:(k.mota||"").trim(),
                  anh:(k.anh||"").trim(),
-                 nenTang: k.nenTang || (/dailymotion/i.test(k.url||"") ? "dailymotion" : "youtube") }))
+                 nenTang: k.nenTang || (/dailymotion/i.test(k.url||"") ? "dailymotion" : "youtube"),
+                 video: Array.isArray(k.video) ? k.video.slice(0,12) : [],
+                 tuDong: !!k.tuDong }))
     .filter(k => k.ten && k.url);
   CFG = {
     momoSo: $("#tMomoSo").value.trim(), momoTen: $("#tMomoTen").value.trim(),
