@@ -4,5 +4,25 @@
   "momoQR": "",
   "loiCamOn": "",
   "supaUrl": "https://dhyjzbigqpksktqtensy.supabase.co",
-  "supaKey": "sb_publishable_xKbO0ejQi6A8b2NMYg9Q3w_Ikq0Cu6y"
+  "supaKey": "sb_publishable_xKbO0ejQi6A8b2NMYg9Q3w_Ikq0Cu6y",
+  "kenh": [
+    {
+      "ten": "Uyển Nhi Vietsub",
+      "url": "https://youtube.com/@uyennhivietsub2?si=zgg25r8y47x3azW9",
+      "mota": "",
+      "anh": ""
+    },
+    {
+      "ten": "Top Nhì Vietsub",
+      "url": "https://youtube.com/@topnhivietsub?si=5nJ4aR6fAw0hnhGq",
+      "mota": "",
+      "anh": ""
+    },
+    {
+      "ten": "Dom Bi Review",
+      "url": "https://youtube.com/@dombireview?si=4LCxTA9afHbY7Kvr",
+      "mota": "",
+      "anh": ""
+    }
+  ]
 }
