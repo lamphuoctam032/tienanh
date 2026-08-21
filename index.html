@@ -189,6 +189,29 @@ body.view-detail .detail{display:block}
 .cmt p{margin:4px 0 0;font-size:14px;color:var(--tx2)}
 .note{font-size:12.5px;color:var(--tx3);margin-top:12px}
 
+/* ---- kênh YouTube ---- */
+.kenhBox{margin-top:16px;display:none}
+.kenhBox.on{display:block}
+.kenhBox .kh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+.kenhs{display:flex;gap:9px;overflow-x:auto;scrollbar-width:none;padding-bottom:3px}
+.kenhs::-webkit-scrollbar{display:none}
+.kenh{flex:1 1 260px;min-width:250px;display:flex;align-items:center;gap:11px;text-decoration:none;
+  background:linear-gradient(135deg,rgba(255,45,45,.09),rgba(22,27,35,.9));
+  border:1px solid rgba(255,70,70,.28);border-radius:8px;padding:10px 12px;transition:.16s}
+.kenh:hover{border-color:#FF4646;background:linear-gradient(135deg,rgba(255,45,45,.16),rgba(22,27,35,.95))}
+.kenh .av2{flex:none;width:42px;height:42px;border-radius:50%;overflow:hidden;background:#FF3D3D;
+  display:grid;place-items:center;color:#fff}
+.kenh .av2 img{width:100%;height:100%;object-fit:cover}
+.kenh .tx{flex:1;min-width:0}
+.kenh .tx b{display:block;font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kenh .tx span{display:block;font-size:11.5px;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kenh .go{flex:none;font-size:12px;font-weight:600;color:#FF6B6B;white-space:nowrap}
+@media(max-width:640px){
+  .kenh{min-width:min(280px,86vw);padding:9px 11px}
+  .kenh .av2{width:38px;height:38px}
+  .kenh .tx b{font-size:13px}
+}
+
 /* ---- ủng hộ ---- */
 .modal{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;padding:16px}
 .modal.on{display:flex}
@@ -354,6 +377,12 @@ footer .fl{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
           </div>
         </div>
 
+        <div class="kenhBox" id="kenhBox">
+          <div class="kh"><span class="eyebrow">Kênh của mình</span>
+            <span class="eyebrow" style="color:var(--tx3)">bấm để theo dõi</span></div>
+          <div class="kenhs" id="kenhs"></div>
+        </div>
+
         <section style="padding-top:24px">
           <div class="sec-head" style="margin-bottom:6px">
             <h2 class="display" style="font-size:19px">Danh sách <em>phần</em></h2>
@@ -434,7 +463,7 @@ const phim = id => PHIM.find(p => p.id === id);
 const toSec = v => { const a = String(v).split(":").map(Number); return a.length===3 ? a[0]*3600+a[1]*60+a[2] : a[0]*60+(a[1]||0); };
 const dmThumb = dm => dm ? "https://www.dailymotion.com/thumbnail/video/" + dm : "";
 const esc = v => String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
-const CFG = { momoSo:"", momoTen:"", momoQR:"", loiCamOn:"", supaUrl:"", supaKey:"" };
+const CFG = { momoSo:"", momoTen:"", momoQR:"", loiCamOn:"", supaUrl:"", supaKey:"", kenh:[] };
 const XEM = {};   /* id video -> luot xem, lay tu Dailymotion */
 function fmtXem(n){
   if(n == null) return null;
@@ -654,7 +683,7 @@ function renderDetail(autoplay){
   $("#mPos").textContent = `${S.ep+1}/${p.tap.length} · ${t.phut}`;
   $("#mPrev").disabled = S.ep === 0;
   $("#mNext").disabled = S.ep === p.tap.length - 1;
-  renderEps(); renderComments(); mountPlayer(autoplay);
+  veKenh(); renderEps(); renderComments(); mountPlayer(autoplay);
 }
 
 function capNhatXemChiTiet(){ if(S.phimId) renderDetail(false); }
@@ -731,6 +760,20 @@ $("#cmtSend").onclick = async ()=>{
 };
 
 /* ---------- ủng hộ ---------- */
+function veKenh(){
+  const ds = (CFG.kenh || []).filter(k => k && k.url && k.ten);
+  $("#kenhBox").classList.toggle("on", ds.length > 0);
+  if(!ds.length) return;
+  $("#kenhs").innerHTML = ds.slice(0,4).map(k=>`
+    <a class="kenh" href="${esc(k.url)}" target="_blank" rel="noopener">
+      <span class="av2">${k.anh
+        ? `<img src="${esc(k.anh)}" alt="" loading="lazy">`
+        : `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2s-.2-1.4-.8-2c-.8-.8-1.6-.8-2-.9C16 4.1 12 4.1 12 4.1s-4 0-6.8.2c-.4.1-1.2.1-2 .9-.6.6-.8 2-.8 2S2.2 8.8 2.2 10.5v1.6c0 1.6.2 3.3.2 3.3s.2 1.4.8 2c.8.8 1.8.8 2.2.9 1.6.1 6.6.2 6.6.2s4 0 6.8-.2c.4-.1 1.2-.1 2-.9.6-.6.8-2 .8-2s.2-1.6.2-3.3v-1.6c0-1.6-.2-3.3-.2-3.3ZM9.9 14.3V8.6l5.2 2.9-5.2 2.8Z"/></svg>`}</span>
+      <span class="tx"><b>${esc(k.ten)}</b><span>${esc(k.mota || "Kênh YouTube")}</span></span>
+      <span class="go">Xem kênh ↗</span>
+    </a>`).join("");
+}
+
 function dungCauHinh(){
   if(CFG.momoSo || CFG.momoQR){
     $("#uhBtn").style.display = "inline-flex";
@@ -754,7 +797,7 @@ async function napCauHinh(){
     const r = await fetch("cauhinh.json?v=" + Date.now());
     if(!r.ok) return;
     Object.assign(CFG, await r.json());
-    dungCauHinh();
+    dungCauHinh(); veKenh();
   }catch(e){}
 }
 

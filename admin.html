@@ -40,6 +40,14 @@ header{position:sticky;top:0;z-index:40;background:rgba(232,233,228,.94);backdro
 .intro{padding:22px 0;border-bottom:1px solid var(--rule);color:var(--ink-60);font-size:13.5px}
 main{padding:24px 0 60px}
 
+.kr{border:1px solid var(--rule);border-radius:var(--r);padding:11px;margin-bottom:9px;background:#F3F3F0}
+.kr .kt{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.kr .kt input{flex:1}
+.kr .kx{flex:none;width:32px;height:32px;display:grid;place-items:center;border:1px solid var(--rule);
+  border-radius:2px;color:var(--warn);font-size:15px}
+.kr .kx:hover{background:var(--warn);color:#fff;border-color:var(--warn)}
+.kr .k2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:820px){ .kr .k2{grid-template-columns:1fr} }
 .tools{display:flex;gap:9px;align-items:center;margin-bottom:16px}
 .tools input{flex:1}
 .phim{border:1px solid var(--rule);background:var(--card);border-radius:var(--radius);margin-bottom:18px;overflow:hidden}
@@ -118,7 +126,7 @@ code{background:#DFE0DB;padding:1px 5px;border-radius:2px;font-family:"Roboto Mo
     <button class="btn btn-ghost" id="openBtn">Mở file từ máy</button>
     <button class="btn btn-ghost" id="loadBtn">Nạp lại từ web</button>
     <input type="file" id="fileIn" accept=".json,application/json" hidden>
-    <button class="btn btn-ghost" id="trangBtn">♥ Ủng hộ & bình luận</button>
+    <button class="btn btn-ghost" id="trangBtn">♥ Cài đặt trang</button>
     <button class="btn btn-ghost" id="cfgBtn" title="Cài đặt kết nối GitHub">⚙</button>
     <button class="btn btn-ghost" id="dlBtn">↓ Tải về máy</button>
     <button class="btn btn-solid" id="saveBtn">☁ Lưu lên web</button>
@@ -213,7 +221,14 @@ code{background:#DFE0DB;padding:1px 5px;border-radius:2px;font-family:"Roboto Mo
     <div class="f1"><label>Lời nhắn trong hộp ủng hộ</label>
       <textarea id="tLoi" placeholder="Để trống thì dùng lời mặc định"></textarea></div>
 
-    <div class="eyebrow" style="margin:18px 0 10px">Bình luận lưu vĩnh viễn (Supabase)</div>
+    <div class="eyebrow" style="margin:20px 0 10px">Kênh YouTube giới thiệu</div>
+    <p style="font-size:12.5px;color:var(--ink-60);margin:0 0 10px">
+      Hiện dưới phần thông tin tập, trên danh sách phần. Tối đa 4 kênh.
+    </p>
+    <div id="kenhList"></div>
+    <button class="btn btn-sm btn-ghost" id="themKenh" style="margin-bottom:6px">+ Thêm kênh</button>
+
+    <div class="eyebrow" style="margin:20px 0 10px">Bình luận lưu vĩnh viễn (Supabase)</div>
     <div class="f1"><label>Project URL</label><input id="tSupaUrl" placeholder="https://abcxyz.supabase.co"></div>
     <div class="f1"><label>Khoá anon public</label><input id="tSupaKey" placeholder="eyJhbGci…"></div>
     <p style="font-size:12.5px;color:var(--ink-60);margin:0 0 16px">
@@ -397,26 +412,57 @@ async function nap(){
 }
 
 /* ---------- cài đặt trang: ủng hộ + bình luận ---------- */
-let CFG = { momoSo:"", momoTen:"", momoQR:"", loiCamOn:"", supaUrl:"", supaKey:"" };
+let CFG = { momoSo:"", momoTen:"", momoQR:"", loiCamOn:"", supaUrl:"", supaKey:"", kenh:[] };
 async function napCfg(){
   try{
     const r = await fetch("cauhinh.json?v=" + Date.now());
     if(r.ok) Object.assign(CFG, await r.json());
   }catch(e){}
 }
+function veKenhAdmin(){
+  const ds = CFG.kenh || [];
+  $("#kenhList").innerHTML = ds.map((k,i)=>`
+    <div class="kr">
+      <div class="kt">
+        <input data-k="ten" data-i="${i}" value="${escA(k.ten)}" placeholder="Tên kênh">
+        <button class="kx" data-xk="${i}" title="Xoá kênh">×</button>
+      </div>
+      <div class="k2">
+        <input data-k="url" data-i="${i}" value="${escA(k.url)}" placeholder="https://youtube.com/@tenkenh">
+        <input data-k="mota" data-i="${i}" value="${escA(k.mota)}" placeholder="Mô tả ngắn (tuỳ chọn)">
+      </div>
+      <input data-k="anh" data-i="${i}" value="${escA(k.anh)}" placeholder="Ảnh đại diện, ví dụ anh/kenh1.jpg (tuỳ chọn)" style="margin-top:8px">
+    </div>`).join("");
+  $("#kenhList").querySelectorAll("[data-k]").forEach(el=>{
+    el.oninput = ()=> { CFG.kenh[+el.dataset.i][el.dataset.k] = el.value; };
+  });
+  $("#kenhList").querySelectorAll("[data-xk]").forEach(b=>{
+    b.onclick = ()=> { CFG.kenh.splice(+b.dataset.xk,1); veKenhAdmin(); };
+  });
+  $("#themKenh").style.display = ds.length >= 4 ? "none" : "inline-flex";
+}
+function escA(v){ return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;"); }
+$("#themKenh").onclick = ()=>{ (CFG.kenh ||= []).push({ten:"",url:"",mota:"",anh:""}); veKenhAdmin(); };
+
 function moTrang(){
   $("#tMomoSo").value = CFG.momoSo || ""; $("#tMomoTen").value = CFG.momoTen || "";
   $("#tMomoQR").value = CFG.momoQR || ""; $("#tLoi").value = CFG.loiCamOn || "";
   $("#tSupaUrl").value = CFG.supaUrl || ""; $("#tSupaKey").value = CFG.supaKey || "";
+  CFG.kenh = Array.isArray(CFG.kenh) ? CFG.kenh : [];
+  veKenhAdmin();
   $("#trangCfg").classList.add("on");
 }
 $("#trangBtn").onclick = moTrang;
 document.querySelectorAll("#trangCfg [data-y]").forEach(el => el.onclick = ()=> $("#trangCfg").classList.remove("on"));
 $("#tLuu").onclick = ()=>{
+  const kenh = (CFG.kenh || [])
+    .map(k => ({ ten:(k.ten||"").trim(), url:(k.url||"").trim(), mota:(k.mota||"").trim(), anh:(k.anh||"").trim() }))
+    .filter(k => k.ten && k.url);
   CFG = {
     momoSo: $("#tMomoSo").value.trim(), momoTen: $("#tMomoTen").value.trim(),
     momoQR: $("#tMomoQR").value.trim(), loiCamOn: $("#tLoi").value.trim(),
-    supaUrl: $("#tSupaUrl").value.trim().replace(/\/+$/,""), supaKey: $("#tSupaKey").value.trim()
+    supaUrl: $("#tSupaUrl").value.trim().replace(/\/+$/,""), supaKey: $("#tSupaKey").value.trim(),
+    kenh
   };
   BAN_NHAP = true;
   $("#trangCfg").classList.remove("on");
